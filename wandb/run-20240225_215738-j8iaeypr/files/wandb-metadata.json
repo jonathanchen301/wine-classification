@@ -1,0 +1,49 @@
+{
+    "os": "macOS-14.1.1-arm64-arm-64bit",
+    "python": "3.10.13",
+    "heartbeatAt": "2024-02-26T02:57:38.622534",
+    "startedAt": "2024-02-26T02:57:38.255680",
+    "docker": null,
+    "cuda": null,
+    "args": [],
+    "state": "running",
+    "program": "/Users/jonathan/projects/wine-classification/src/train.py",
+    "codePathLocal": "src/train.py",
+    "codePath": "src/train.py",
+    "git": {
+        "remote": "https://github.com/jonathanchen301/wine-classification.git",
+        "commit": "629de466374272478853231dcff8789f8268dbbe"
+    },
+    "email": "jonathanchen301@gmail.com",
+    "root": "/Users/jonathan/projects/wine-classification",
+    "host": "Jonathans-MacBook-Pro.local",
+    "username": "jonathan",
+    "executable": "/Users/jonathan/anaconda3/envs/ml/bin/python",
+    "cpu_count": 10,
+    "cpu_count_logical": 10,
+    "cpu_freq": {
+        "current": 3228,
+        "min": 600,
+        "max": 3228
+    },
+    "cpu_freq_per_core": [
+        {
+            "current": 3228,
+            "min": 600,
+            "max": 3228
+        }
+    ],
+    "disk": {
+        "/": {
+            "total": 926.3517189025879,
+            "used": 12.534217834472656
+        }
+    },
+    "gpuapple": {
+        "type": "arm",
+        "vendor": "Apple"
+    },
+    "memory": {
+        "total": 16.0
+    }
+}

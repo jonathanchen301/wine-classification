@@ -1,19 +1,18 @@
 from dataset import *
 from model import *
 from sklearn.model_selection import train_test_split
-import wandb
 
-# wandb.init(
-#     project="wine-classification",
-#     config={
-#         "learning_rate": 0.001,
-#         "architecture": "Multilayer Perceptron",
-#         "dataset": "Wine",
-#         "epochs": 100,
-#         "hidden_dims": 32,
-#         "layers": 2,
-#     },
-# )
+wandb.init(
+    project="wine-classification",
+    config={
+        "learning_rate": 0.0001,
+        "architecture": "Multilayer Perceptron",
+        "dataset": "Wine",
+        "epochs": 200,
+        "hidden_dims": 32,
+        "layers": 2,
+    },
+)
 
 dataset = wineDataset(
     "data/wine.data",
@@ -48,8 +47,8 @@ dev_dataloader = DataLoader(dev_data, batch_size=1, shuffle=False)
 test_dataloader = DataLoader(test_data, batch_size=1, shuffle=False)
 
 hidden_dims = 32
-num_epochs = 100
-lr = 0.001
+num_epochs = 200
+lr = 0.0001
 
 model = MultilayerPerceptronClassifier(13, hidden_dims, 3)
 

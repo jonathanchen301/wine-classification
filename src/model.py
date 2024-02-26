@@ -1,6 +1,7 @@
 import torch
 import torch.nn as nn
 import csv
+import wandb
 
 
 class MultilayerPerceptronClassifier(nn.Module):
@@ -71,6 +72,15 @@ class MultilayerPerceptronClassifier(nn.Module):
 
             dev_loss = total_dev_loss / len(dev_dataloader.dataset)
             dev_accuracy = correct_dev_predictions / total_dev_samples
+
+            wandb.log(
+                {
+                    "train_loss": train_loss,
+                    "train_accuracy": int(train_accuracy * 100),
+                    "dev_loss": dev_loss,
+                    "dev_accuracy": int(dev_accuracy * 100),
+                }
+            )
 
             print(
                 "Train Loss: "
