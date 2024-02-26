@@ -24,9 +24,13 @@ class wineDataset:
         return self.nsamples
 
 
-class toTensor:
+class OneHotEncoding:
+    def __init__(self, num_classes):
+        self.num_classes = num_classes
 
     def __call__(self, sample):
-        return torch.tensor(sample[0], dtype=torch.float32), torch.tensor(
-            sample[1], dtype=torch.float32
-        )
+        features, label = sample
+        features = torch.tensor(features, dtype=torch.float32)
+        label = torch.zeros(self.num_classes)
+        label[int(sample[1]) - 1] = 1
+        return features, label

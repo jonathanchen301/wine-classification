@@ -1,9 +1,23 @@
 from dataset import *
+from model import *
 from sklearn.model_selection import train_test_split
+import wandb
+
+# wandb.init(
+#     project="wine-classification",
+#     config={
+#         "learning_rate": 0.001,
+#         "architecture": "Multilayer Perceptron",
+#         "dataset": "Wine",
+#         "epochs": 100,
+#         "hidden_dims": 32,
+#         "layers": 2,
+#     },
+# )
 
 dataset = wineDataset(
     "data/wine.data",
-    transform=toTensor(),
+    transform=OneHotEncoding(3),
     headers=[
         "class",
         "alcohol",
@@ -29,6 +43,17 @@ test_data, dev_data = train_test_split(
     test_data, test_size=0.5, shuffle=True, random_state=42
 )
 
-train_dataloader = DataLoader(train_data, batch_size=1, shuffle=True, random_state=42)
-dev_dataloader = DataLoader(dev_data, batch_size=1, shuffle=True, random_state=42)
-test_dataloader = DataLoader(test_data, batch_size=1, shuffle=True, random_state=42)
+train_dataloader = DataLoader(train_data, batch_size=1, shuffle=False)
+dev_dataloader = DataLoader(dev_data, batch_size=1, shuffle=False)
+test_dataloader = DataLoader(test_data, batch_size=1, shuffle=False)
+
+hidden_dims = 32
+num_epochs = 100
+lr = 0.001
+
+model = MultilayerPerceptronClassifier(13, hidden_dims, 3)
+
+optimizer = torch.optim.Adam(model.parameters(), lr=lr)
+loss_fct = nn.CrossEntropyLoss()
+
+model.learn(train_dataloader, dev_dataloader, num_epochs, optimizer, loss_fct)
