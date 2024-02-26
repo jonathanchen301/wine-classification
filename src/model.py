@@ -1,7 +1,6 @@
 import torch
 import torch.nn as nn
 import csv
-import wandb
 
 
 class MultilayerPerceptronClassifier(nn.Module):
@@ -73,15 +72,6 @@ class MultilayerPerceptronClassifier(nn.Module):
             dev_loss = total_dev_loss / len(dev_dataloader.dataset)
             dev_accuracy = correct_dev_predictions / total_dev_samples
 
-            wandb.log(
-                {
-                    "train_loss": train_loss,
-                    "train_accuracy": int(train_accuracy * 100),
-                    "dev_loss": dev_loss,
-                    "dev_accuracy": int(dev_accuracy * 100),
-                }
-            )
-
             print(
                 "Train Loss: "
                 + str(train_loss)
@@ -98,23 +88,38 @@ class MultilayerPerceptronClassifier(nn.Module):
         print("Evaluating Model On Test Set")
 
         total_test_loss = 0.0
+        correct_test_predictions = 0
+        total_samples = 0
         all_predictions = []
         all_labels = []
 
         for batch_X, batch_y in test_dataloader:
-            predictions = self.predict(batch_X)
+            with torch.no_grad():
+                predictions = self.forward(batch_X)
             loss = loss_fct(predictions, batch_y)
             total_test_loss += loss.item() * batch_X.size(0)
 
-            all_predictions.extend(predictions.tolist())
-            all_labels.extend(batch_y.tolist())
-        test_loss = total_test_loss / len(test_dataloader.dataset)
+            _, predicted_test_labels = torch.max(predictions, 1)
+            _, actual_labels = torch.max(batch_y, 1)
+            correct_test_predictions += (
+                (predicted_test_labels == actual_labels).sum().item()
+            )
+            total_samples += batch_y.size(0)
 
-        print("Test Loss: " + str(test_loss))
+            all_predictions.extend(predicted_test_labels.tolist())
+            all_labels.extend(actual_labels.tolist())
+        test_loss = total_test_loss / len(test_dataloader.dataset)
+        accuracy = correct_test_predictions // total_samples
+
+        print("Test Loss: " + str(test_loss) + " | Test Accuracy: " + str(accuracy))
+
+        for i in range(len(all_predictions)):
+            all_predictions[i] = all_predictions[i] + 1
+            all_labels[i] = all_labels[i] + 1
 
         if output_csv:
             with open(output_csv, "w", newline="") as csvfile:
                 writer = csv.writer(csvfile)
                 writer.writerow(["Prediction", "Actual"])
                 for pred, actual in zip(all_predictions, all_labels):
-                    writer.writerow([pred[0], actual])
+                    writer.writerow([pred, actual])

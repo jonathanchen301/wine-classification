@@ -2,18 +2,6 @@ from dataset import *
 from model import *
 from sklearn.model_selection import train_test_split
 
-wandb.init(
-    project="wine-classification",
-    config={
-        "learning_rate": 0.0001,
-        "architecture": "Multilayer Perceptron",
-        "dataset": "Wine",
-        "epochs": 200,
-        "hidden_dims": 32,
-        "layers": 2,
-    },
-)
-
 dataset = wineDataset(
     "data/wine.data",
     transform=OneHotEncoding(3),
@@ -56,3 +44,4 @@ optimizer = torch.optim.Adam(model.parameters(), lr=lr)
 loss_fct = nn.CrossEntropyLoss()
 
 model.learn(train_dataloader, dev_dataloader, num_epochs, optimizer, loss_fct)
+model.evaluate(test_dataloader, loss_fct, "./predictions.csv")
